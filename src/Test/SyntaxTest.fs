@@ -3,7 +3,7 @@ module Tests
 open Expecto
 open Expecto.Flip
 open FParsec
-open Totohdl.Syntax
+open Tathdl.Syntax
 open Swensen.Unquote
 
 [<Tests>]

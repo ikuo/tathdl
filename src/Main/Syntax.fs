@@ -1,4 +1,4 @@
-module Totohdl.Syntax
+module Tathdl.Syntax
 
 open System
 open FParsec

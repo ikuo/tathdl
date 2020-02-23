@@ -1,4 +1,4 @@
-module Totohdl.Vhdl
+module Tathdl.Vhdl
 
 open System
 open System.Text.RegularExpressions

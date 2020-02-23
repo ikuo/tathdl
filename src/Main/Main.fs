@@ -1,10 +1,10 @@
-﻿module Totohdl.Main
+﻿module Tathdl.Main
 
 open System
 open FParsec
-open Totohdl.Syntax
-open Totohdl.Semantics
-open Totohdl.Vhdl
+open Tathdl.Syntax
+open Tathdl.Semantics
+open Tathdl.Vhdl
 
 let getResult = function
   | Success(result, _, _) -> result

@@ -1,4 +1,4 @@
-# totohdl
+# tathdl
 
 An implementation sketch of a translator from annotated Timed Automata[*1] written in [Graphviz](https://graphviz.org/)'s dot language to VHDL.
 

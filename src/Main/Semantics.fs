@@ -1,6 +1,6 @@
-module Totohdl.Semantics
+module Tathdl.Semantics
 
-open Totohdl.Syntax
+open Tathdl.Syntax
 
 let uniq lst = lst |> Set.ofList |> Set.toList
 
