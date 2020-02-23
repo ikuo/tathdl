@@ -131,7 +131,7 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
   sprintf "\
     |LIBRARY ieee;\n\
     |USE ieee.std_logic_1164.ALL;\n\
-    |USE ieee.numeric_std.ALL;" |> put out
+    |USE ieee.numeric_std.ALL;\n" |> put out
 
   emitEntity <| fun _ ->
     sprintf "\
