@@ -27,36 +27,32 @@ BEGIN
           state <= s1;
         END IF;
       WHEN s1 =>
-        IF input = '0' AND shift_right(counter_c, 10) < 18 THEN
-          state <= s1;
+        IF input = '1' AND shift_right(counter_c, 10) < 18 THEN
+          state <= s0;
         ELSIF input = '1' AND shift_right(counter_c, 10) >= 18 AND shift_right(counter_c, 10) <= 18 THEN
           counter_c <= (others => '0');
           state <= s2;
-        ELSE
+        ELSIF shift_right(counter_c, 10) > 18 THEN
           state <= s0;
         END IF;
       WHEN s2 =>
-        IF input = '1' AND shift_right(counter_c, 10) < 8 THEN
-          state <= s2;
+        IF input = '0' AND shift_right(counter_c, 10) < 8 THEN
+          state <= s0;
         ELSIF input = '0' AND shift_right(counter_c, 10) >= 8 AND shift_right(counter_c, 10) <= 9 THEN
           counter_c <= (others => '0');
           y <= '1';
           state <= s3;
-        ELSE
+        ELSIF shift_right(counter_c, 10) > 9 THEN
           state <= s0;
         END IF;
       WHEN s3 =>
-        IF shift_right(counter_c, 15) < 12 THEN
-          state <= s3;
-        ELSE
+        IF shift_right(counter_c, 15) > 12 THEN
           counter_c <= (others => '0');
           y <= '0';
           state <= s4;
         END IF;
       WHEN s4 =>
-        IF shift_right(counter_c, 15) < 126 THEN
-          state <= s4;
-        ELSE
+        IF shift_right(counter_c, 15) > 126 THEN
           state <= s0;
         END IF;
       END CASE;
