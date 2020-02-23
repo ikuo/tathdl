@@ -26,9 +26,15 @@ Input | Value
 Timed automaton | ../../examples/ir2solenoid/src/fsm.dot (Figure 1.)
 Clock frequency | 2.08MHz
 
+fsm.dot:
+
+![](./examples/ir2solenoid/output/fsm.svg)
+
 ```shell
 dotnet run ../../examples/ir2solenoid/src/fsm.dot 2.08MHz
 ```
+
+generates [a VHDL code](./examples/ir2solenoid/output/clock2_08MHz.vhd).
 
 ## Reference
 
