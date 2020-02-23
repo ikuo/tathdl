@@ -39,7 +39,7 @@ type Clock = Clock of string
 type Property = Property of string * Expr
 type Stmt =
   | Properties of Property list
-  | Node of NodeId * string
+  | Node of NodeId * string option
   | Edge of NodeId * NodeId * (Condition * Clock list * Output list)
 type Graph = Graph of string * Stmt list
 
@@ -116,7 +116,7 @@ let specific = (opt stdLogic) .>>. (constraints <|>% []) |>> Specific
 let condition = (stringReturn "else" Else) .>> ws <|> specific
 let transitionAttrs = dquotes (tuple3 condition clocks actions)
 
-let node = nodeId .>>.? (label (dquotes stringLiteral)) |>> Node
+let node = nodeId .>>.? opt (label (dquotes stringLiteral)) .>>? %";" |>> Node
 let edge = tuple3 (nodeId .>> %"->") nodeId (label transitionAttrs) |>> Edge
 
 // Containers

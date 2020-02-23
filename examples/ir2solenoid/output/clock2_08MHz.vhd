@@ -10,7 +10,7 @@ PORT(clock: IN STD_LOGIC;
 END Fsm1;
 
 ARCHITECTURE rtl OF Fsm1 IS
-  TYPE StateType IS (s0,s1,s2,s3,s4);
+  TYPE StateType IS (s0,sL0,sL1,sY1,sY2);
   SIGNAL state: StateType := s0;
   CONSTANT counter_c_max : INTEGER := 2 ** 22;
   SIGNAL counter_c : UNSIGNED (22 downto 0) := (others => '0');
@@ -25,34 +25,34 @@ BEGIN
       WHEN s0 =>
         IF input = '0' THEN
           counter_c <= (others => '0');
-          state <= s1;
+          state <= sL0;
         END IF;
-      WHEN s1 =>
+      WHEN sL0 =>
         IF input = '1' AND shift_right(counter_c, 10) < 18 THEN
           state <= s0;
         ELSIF input = '1' AND shift_right(counter_c, 10) >= 18 AND shift_right(counter_c, 10) <= 18 THEN
           counter_c <= (others => '0');
-          state <= s2;
+          state <= sL1;
         ELSIF shift_right(counter_c, 10) > 18 THEN
           state <= s0;
         END IF;
-      WHEN s2 =>
+      WHEN sL1 =>
         IF input = '0' AND shift_right(counter_c, 10) < 8 THEN
           state <= s0;
         ELSIF input = '0' AND shift_right(counter_c, 10) >= 8 AND shift_right(counter_c, 10) <= 9 THEN
           counter_c <= (others => '0');
           y <= '1';
-          state <= s3;
+          state <= sY1;
         ELSIF shift_right(counter_c, 10) > 9 THEN
           state <= s0;
         END IF;
-      WHEN s3 =>
+      WHEN sY1 =>
         IF shift_right(counter_c, 15) > 12 THEN
           counter_c <= (others => '0');
           y <= '0';
-          state <= s4;
+          state <= sY2;
         END IF;
-      WHEN s4 =>
+      WHEN sY2 =>
         IF shift_right(counter_c, 15) > 126 THEN
           state <= s0;
         END IF;

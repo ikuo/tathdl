@@ -1,6 +1,10 @@
 # tathdl
 
-An implementation sketch of a translator from annotated Timed Automata[*1] written in [Graphviz](https://graphviz.org/)'s dot language to VHDL.
+An implementation sketch of a translator from annotated Timed Automata[*1] to VHDL.
+
+Inputs:
+1. A timed automaton written in a subset of [Graphviz](https://graphviz.org/)'s dot language, and
+2. Clock frequency used for timers
 
 ## Setup
 

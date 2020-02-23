@@ -19,7 +19,7 @@ let rec eval (props: Map<string,Expr>, expr) =
       | Some(Minus, expr') -> leftVal - (eval(props, Expr(expr', None)))
   | _ -> failwith (sprintf "Unsupported expression %A" expr)
 
-type State(id: string, label: string) =
+type State(id: string, label: string option) =
   member x.Id = id
   override x.GetHashCode() = hash(id)
   override x.Equals(o) =
