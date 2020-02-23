@@ -1,4 +1,4 @@
-digraph frame_b_left {
+digraph fsm1 {
     graph [label = "T=562us, a=0.2T, α=500us, β=20ms."]
     0 [label = "initial"]
     1 [label = "leader_0"]

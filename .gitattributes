@@ -1,4 +1,5 @@
 *           text=auto
+*.dot       text eol=lf
 *.sln       text eol=crlf
 *.vcproj    text eol=crlf
 *.svg       -text
