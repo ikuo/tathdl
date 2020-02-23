@@ -41,18 +41,18 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     let ctrName = counterName counterId
     let ctrMaxName = counterMaxName counterId
     fprintfn out "  CONSTANT %s : INTEGER := 2 ** %d;" ctrMaxName numBits
-    fprintfn out "  SIGNAL %s : UNSIGNED (%d downto 0);" ctrName numBits
+    fprintfn out "  SIGNAL %s : UNSIGNED (%d downto 0) := (others => '0');" ctrName numBits
 
   let emitIncrement (counterId: string) _ =
     let ctrName = counterName counterId
     let ctrMaxName = counterMaxName counterId
-    fprintfn out "      %s <= (%s + 1) MOD %s;" ctrName ctrName ctrMaxName
+    fprintfn out "      %s <= %s + 1;" ctrName ctrName
 
   let emitArchitecture f =
     let statesSpec = aut.States |> List.map stateSpec |> String.concat ","
     emitN "ARCHITECTURE rtl OF %s IS" aut.Name
     emitN "  TYPE StateType IS (%s);" statesSpec
-    emit0 "  SIGNAL state: StateType;"
+    emitN "  SIGNAL state: StateType := %s;" (stateSpec aut.States.[0])
     aut.CounterNumBits clockFreq |> Map.iter emitCounter
     emit0 "BEGIN"
     f()
