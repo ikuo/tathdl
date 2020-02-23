@@ -27,7 +27,7 @@ let counterMaxName id = sprintf "counter_%s_max" id
 let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
   let aut = automaton
   let outports = aut.ActionVariables
-  let outSpec = outports |> List.map (sprintf "  %s: OUT_STD_LOGIC") |> String.concat ";\n"
+  let outSpec = outports |> List.map (sprintf "  %s: OUT STD_LOGIC") |> String.concat ";\n"
 
   let emitN = fprintfn out
   let emit0 (str: string) = out.WriteLine(str)
@@ -41,7 +41,7 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     let ctrName = counterName counterId
     let ctrMaxName = counterMaxName counterId
     fprintfn out "  CONSTANT %s : INTEGER := 2 ** %d;" ctrMaxName numBits
-    fprintfn out "  SIGNAL %s : INTEGER RANGE 0 TO %s - 1 := 0;" ctrName ctrMaxName
+    fprintfn out "  SIGNAL %s : UNSIGNED (%d downto 0);" ctrName numBits
 
   let emitIncrement (counterId: string) _ =
     let ctrName = counterName counterId
@@ -98,7 +98,7 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     | Else -> failwith "Unexpected 'else'"
 
   let emitClockReset' indent (clk: Semantics.Clock) =
-    sprintf "%s%s := 0;" indent (counterName clk.Id)
+    sprintf "%s%s <= (others => '0');" indent (counterName clk.Id)
 
   let mapToOption (lst: 'a list) f =
     if lst.Length > 0 then
@@ -126,7 +126,12 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
       emitN "      WHEN %s =>" (stateSpec state)
       emit0' "        "
       ts |> List.map emitTransition' |> String.concat "\n        ELS" |> emit0
-      emit0 "        END IF"
+      emit0 "        END IF;"
+
+  sprintf "\
+    |LIBRARY ieee;\n\
+    |USE ieee.std_logic_1164.ALL;\n\
+    |USE ieee.numeric_std.ALL;" |> put out
 
   emitEntity <| fun _ ->
     sprintf "\
