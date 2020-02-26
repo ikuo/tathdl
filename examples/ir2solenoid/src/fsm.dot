@@ -1,6 +1,6 @@
 digraph Fsm1 {
     graph [label = "T=562us, a=0.2T, α=500us, β=20ms."]
-    0  [label = "start"];
+    0  [label = "start", shape = doublecircle];
     L0;
     L1;
     Y1 [label = "y:=1"];

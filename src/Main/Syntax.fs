@@ -73,7 +73,7 @@ let stringLiteral =
   let normal = manySatisfy (fun c -> c <> '"' && c <> '\\')
   let escaped = pstring "\\" >>. (anyOf "\\nrt\"" |>> unescape)
   stringsSepBy normal escaped
-let label p = between %"[" %"]" (%"label" >>. %"=" >>. p)
+let label p = %"label" >>. %"=" >>. p
 let stdLogic = (stringReturn "0" Zero <|> stringReturn "1" One) .>> ws
 let timeUnit = choice [ %"s" >>% 6; %"ms" >>% 3; %"us" >>% 0; %"ns" >>% -3 ] .>> ws
 let dquotes p = between %"\"" %"\"" p
@@ -115,13 +115,17 @@ let clocks = (between %"{" %"}" (sepBy ident %",") |>> List.map Clock) <|>% []
 let specific = (opt stdLogic) .>>. (constraints <|>% []) |>> Specific
 let condition = (stringReturn "else" Else) .>> ws <|> specific
 let transitionAttrs = dquotes (tuple3 condition clocks actions)
+let nodeLabel = label (dquotes stringLiteral)
+let nodeShape = %"," >>. %"shape" >>. %"=" >>. ident
+let nodeAttr = nodeLabel .>>? (opt nodeShape)
 
-let node = nodeId .>>.? opt (label (dquotes stringLiteral)) .>>? %";" |>> Node
-let edge = tuple3 (nodeId .>> %"->") nodeId (label transitionAttrs) |>> Edge
+let node = nodeId .>>.? opt (between %"[" %"]" nodeAttr) .>>? %";" |>> Node
+let edge = tuple3 (nodeId .>> %"->") nodeId (between %"[" %"]" (label transitionAttrs)) |>> Edge
 
 // Containers
 let comment = %"." .>> stringLiteral
-let graphAttr = %"graph" >>. label (dquotes (properties |>> Properties .>> comment))
+let graphLabel = label (dquotes (properties |>> Properties .>> comment))
+let graphAttr = %"graph" >>. between %"[" %"]" graphLabel
 let stmtList = many1 (graphAttr <|> node <|> edge)
 let body = between %"{" %"}" stmtList .>> ws
 let graph = (ws >>. %"digraph" >>. ident .>>. body .>> eof) |>> Graph
