@@ -121,10 +121,12 @@ type Transition
 type Automaton
   ( name: string,
     states: State list,
+    start: State,
     transitions: Transition list
   ) =
   member x.Name = name
   member x.States = states
+  member x.Start = start
 
   member x.CounterNumBits (clockFreq: decimal<MHz>): Map<string, int> =
     let makePair (constr: Constraint) =
@@ -177,4 +179,4 @@ type Automaton
       let states = Automaton.addImplicits states' ts
       let transs = ts |> List.map (Transition.Read(states, props, cs))
       let ss' = Map.toList states |> List.map (fun (k,v) -> v)
-      Automaton(name, (List.rev ss'), transs)
+      Automaton(name, ss', (List.rev ss).Head, transs)

@@ -52,7 +52,7 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     let statesSpec = aut.States |> List.map (fun s -> stateSpec s.Id) |> String.concat ","
     emitN "ARCHITECTURE rtl OF %s IS" aut.Name
     emitN "  TYPE StateType IS (%s);" statesSpec
-    emitN "  SIGNAL state: StateType := %s;" (stateSpec aut.States.[0].Id)
+    emitN "  SIGNAL state: StateType := %s;" (stateSpec aut.Start.Id)
     aut.CounterNumBits clockFreq |> Map.iter emitCounter
     emit0 "BEGIN"
     f()
