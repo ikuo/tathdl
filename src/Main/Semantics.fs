@@ -176,4 +176,5 @@ type Automaton
       let states' = ss |> List.map (fun s -> (s.Id, s)) |> Map.ofList
       let states = Automaton.addImplicits states' ts
       let transs = ts |> List.map (Transition.Read(states, props, cs))
-      Automaton(name, (List.rev ss), transs)
+      let ss' = Map.toList states |> List.map (fun (k,v) -> v)
+      Automaton(name, (List.rev ss'), transs)
