@@ -151,8 +151,15 @@ type Automaton
   member x.ActionVariables =
     transitions |> List.collect (fun t -> t.ActionVariables) |> uniq
 
-  override this.ToString () =
+  override x.ToString () =
     sprintf "Automaton(%s):\nstates=%A\ntransitions=%A)" name states transitions
+
+  static member addImplicits (states: Map<string, State>) ts =
+    let add (id: string) (ss: Map<string, State>) =
+      if ss.ContainsKey id then ss
+      else ss.Add(id, State(id, None))
+    let reducer ss = function (src, dst, _, _, _) -> ss |> (add src) |> (add dst)
+    ts |> List.fold reducer states
 
   static member Read = function
     Graph(name, stmts) ->
@@ -165,8 +172,8 @@ type Automaton
           let newCs = Set.union cs (Set.ofList clocks)
           (ps, ss, trans :: ts, newCs)
       let (ps, ss, ts, cs) = List.fold reducer ([],[],[],Set.empty) stmts
-
       let props = ps |> List.map (function Property(name, expr) -> (name, expr)) |> Map.ofList
-      let states = ss |> List.map (fun s -> (s.Id, s)) |> Map.ofList
+      let states' = ss |> List.map (fun s -> (s.Id, s)) |> Map.ofList
+      let states = Automaton.addImplicits states' ts
       let transs = ts |> List.map (Transition.Read(states, props, cs))
       Automaton(name, (List.rev ss), transs)
