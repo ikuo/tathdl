@@ -20,7 +20,7 @@ let put out str =
   let str' = Regex.Replace(str, "^\\S*\\|", "", RegexOptions.Multiline)
   fprintfn out "%s" str'
 
-let stateSpec (state: State) = sprintf "s%s" state.Id
+let stateSpec (stateId: string) = sprintf "s%s" stateId
 let counterName id = sprintf "counter_%s" id
 let counterMaxName id = sprintf "counter_%s_max" id
 
@@ -49,10 +49,10 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     fprintfn out "      %s <= %s + 1;" ctrName ctrName
 
   let emitArchitecture f =
-    let statesSpec = aut.States |> List.map stateSpec |> String.concat ","
+    let statesSpec = aut.States |> List.map (fun s -> stateSpec s.Id) |> String.concat ","
     emitN "ARCHITECTURE rtl OF %s IS" aut.Name
     emitN "  TYPE StateType IS (%s);" statesSpec
-    emitN "  SIGNAL state: StateType := %s;" (stateSpec aut.States.[0])
+    emitN "  SIGNAL state: StateType := %s;" (stateSpec aut.States.[0].Id)
     aut.CounterNumBits clockFreq |> Map.iter emitCounter
     emit0 "BEGIN"
     f()
@@ -63,7 +63,7 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     sprintf "\
       |  BEGIN\n\
       |    IF (reset = '1') THEN\n\
-      |      state <= %s;" (stateSpec aut.States.[0]) |> put out
+      |      state <= %s;" (stateSpec aut.States.[0].Id) |> put out
     emit0 "    ELSIF rising_edge(clock) THEN"
     aut.CounterNumBits clockFreq |> Map.iter emitIncrement
     emit0 "      CASE state IS"
@@ -117,16 +117,15 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     [ ifElseHeader |> Some;
       clockResets;
       outOption;
-      sprintf "%sstate <= %s;" indent (stateSpec t.Dst) |> Some
+      sprintf "%sstate <= %s;" indent (stateSpec t.Dst.Id) |> Some
     ] |> flatMap |> String.concat "\n"
 
   let emitTransitions () =
-    for state in aut.States do
-      let ts = Map.find state.Id aut.TransitionsByState
-      emitN "      WHEN %s =>" (stateSpec state)
+    aut.TransitionsByState |> Map.iter (fun stateId ts ->
+      emitN "      WHEN %s =>" (stateSpec stateId)
       emit0' "        "
       ts |> List.map emitTransition' |> String.concat "\n        ELS" |> emit0
-      emit0 "        END IF;"
+      emit0 "        END IF;")
 
   sprintf "\
     |LIBRARY ieee;\n\
