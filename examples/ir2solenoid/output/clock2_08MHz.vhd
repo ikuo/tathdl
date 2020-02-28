@@ -30,30 +30,30 @@ BEGIN
       WHEN sL0 =>
         IF input = '1' AND shift_right(counter_c, 10) < 18 THEN
           state <= s0;
-        ELSIF input = '1' AND shift_right(counter_c, 10) >= 18 AND shift_right(counter_c, 10) <= 18 THEN
+        ELSIF input = '1' AND shift_right(counter_c, 10) >= 18 AND shift_right(counter_c, 10) <= 19 THEN
           counter_c <= (others => '0');
           state <= sL1;
-        ELSIF shift_right(counter_c, 10) > 18 THEN
+        ELSIF shift_right(counter_c, 10) > 19 THEN
           state <= s0;
         END IF;
       WHEN sL1 =>
         IF input = '0' AND shift_right(counter_c, 10) < 8 THEN
           state <= s0;
-        ELSIF input = '0' AND shift_right(counter_c, 10) >= 8 AND shift_right(counter_c, 10) <= 9 THEN
+        ELSIF input = '0' AND shift_right(counter_c, 10) >= 8 AND shift_right(counter_c, 10) <= 10 THEN
           counter_c <= (others => '0');
           y <= '1';
           state <= sY1;
-        ELSIF shift_right(counter_c, 10) > 9 THEN
+        ELSIF shift_right(counter_c, 10) > 10 THEN
           state <= s0;
         END IF;
       WHEN sY1 =>
-        IF shift_right(counter_c, 15) > 12 THEN
+        IF shift_right(counter_c, 15) > 13 THEN
           counter_c <= (others => '0');
           y <= '0';
           state <= sY2;
         END IF;
       WHEN sY2 =>
-        IF shift_right(counter_c, 15) > 126 THEN
+        IF shift_right(counter_c, 15) > 127 THEN
           state <= s0;
         END IF;
       END CASE;

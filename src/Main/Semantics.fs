@@ -40,7 +40,8 @@ type Constraint
   ( clock: Clock,
     granularity: decimal<μs>,
     comparator: Comparator,
-    value: decimal<μs>
+    value: decimal<μs>,
+    valueFilter: decimal -> decimal
   ) =
 
   member x.Clock = clock
@@ -50,7 +51,7 @@ type Constraint
   member x.IgnoreBits (clockFreq: decimal<MHz>) =
     floor (log (float (granularity * clockFreq)) / log 2.0) |> int
   member x.ComparisonValue (clockFreq: decimal<MHz>) =
-    value * clockFreq |> int >>> x.IgnoreBits clockFreq
+    (value * clockFreq) / (pown 2.0m (x.IgnoreBits clockFreq)) |> valueFilter |> int
 
   override x.ToString() =
     let grtySpec = timeString granularity
@@ -63,18 +64,19 @@ type Constraint
         let (GrtyId gid) = grty
         let grty = eval(props, props.Item(gid))
         let value = eval(props, expr)
-        Constraint(Clock clkId, grty, op, value) :: []
+        let filter = match op with | LT | LTE -> floor | GT | GTE -> ceil
+        Constraint(Clock clkId, grty, op, value, filter) :: []
       | RangeExpr((equality, GrtyId gid), expr, rangeExpr) ->
         let grty = eval(props, props.Item(gid))
         let range = eval(props, rangeExpr)
         let pivot = eval(props, expr)
         let left = pivot - range
         let right = pivot + range
-        let pairs =
+        let trios =
           match equality with
-          | EQ    -> [ (GTE, left); (LTE, right) ]
-          | NotEQ -> [ (LTE, left); (GTE, right) ]
-        pairs |> List.map (fun (op, v) -> Constraint(Clock clkId, grty, op, v))
+          | EQ    -> [ (GTE, left, floor); (LTE, right, ceil) ]
+          | NotEQ -> [ (LTE, left, floor); (GTE, right, ceil) ]
+        trios |> List.map (fun (op, v, f) -> Constraint(Clock clkId, grty, op, v, f))
 
 type Condition = Else | Specific of (StdLogic option * Constraint list)
 
