@@ -40,6 +40,14 @@ dotnet run ../../examples/ir2solenoid/src/fsm.dot 2.08MHz
 
 generates [a VHDL code](./examples/ir2solenoid/output/clock2_08MHz.vhd).
 
+## Building
+
+```shell
+dotnet publish -c Release
+```
+
+See also https://docs.microsoft.com/en-us/dotnet/core/deploying/
+
 ## Reference
 
 - [*1] *Timed Automata: Semantics, Algorithms and Tools*, Johan Bengtsson and Wang Yi, 2004, https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
