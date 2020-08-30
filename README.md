@@ -27,18 +27,18 @@ dotnet run <path-to-dot-file> <clock-frequency>
 
 Input | Value
 ---- | ----
-Timed automaton | ../../examples/ir2solenoid/src/fsm.dot (Figure 1.)
+Timed automaton | ../../samples/ir2solenoid/src/fsm.dot (Figure 1.)
 Clock frequency | 2.08MHz
 
 fsm.dot:
 
-![](./examples/ir2solenoid/output/fsm.svg)
+![](./samples/ir2solenoid/output/fsm.svg)
 
 ```shell
-dotnet run ../../examples/ir2solenoid/src/fsm.dot 2.08MHz
+dotnet run ../../samples/ir2solenoid/src/fsm.dot 2.08MHz
 ```
 
-generates [a VHDL code](./examples/ir2solenoid/output/clock2_08MHz.vhd).
+generates [a VHDL code](./samples/ir2solenoid/output/clock2_08MHz.vhd).
 
 ## Building
 
