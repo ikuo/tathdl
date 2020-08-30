@@ -48,7 +48,7 @@ At project root,
 dotnet publish -c Release
 ```
 
-generates `tathdl.{exe,dll}` into `./artifacts/netcoreapp3.1/`.
+generates `tathdl.{exe,dll}` into `./artifacts/Main/netcoreapp3.1/`.
 
 See also https://docs.microsoft.com/en-us/dotnet/core/deploying/
 
