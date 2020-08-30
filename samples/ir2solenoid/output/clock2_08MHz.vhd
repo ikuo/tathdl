@@ -12,7 +12,7 @@ END Fsm1;
 ARCHITECTURE rtl OF Fsm1 IS
   TYPE StateType IS (s0,sL0,sL1,sY1,sY2);
   SIGNAL state: StateType := s0;
-  CONSTANT counter_c_max : INTEGER := 2 ** 22;
+  CONSTANT counter_c_cycle : INTEGER := 2 ** 22;
   SIGNAL counter_c : UNSIGNED (22 downto 0) := (others => '0');
 BEGIN
   PROCESS (clock,reset)
@@ -20,7 +20,7 @@ BEGIN
     IF (reset = '1') THEN
       state <= s0;
     ELSIF rising_edge(clock) THEN
-      counter_c <= counter_c + 1;
+      counter_c <= (counter_c + 1) MOD counter_c_cycle;
       CASE state IS
       WHEN s0 =>
         IF input = '0' THEN

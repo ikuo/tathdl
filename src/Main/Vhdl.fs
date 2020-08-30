@@ -22,7 +22,7 @@ let put out str =
 
 let stateSpec (stateId: string) = sprintf "s%s" stateId
 let counterName id = sprintf "counter_%s" id
-let counterMaxName id = sprintf "counter_%s_max" id
+let counterCycleName id = sprintf "counter_%s_cycle" id
 
 let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
   let aut = automaton
@@ -39,14 +39,14 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
 
   let emitCounter (counterId: string) (numBits: int) =
     let ctrName = counterName counterId
-    let ctrMaxName = counterMaxName counterId
-    fprintfn out "  CONSTANT %s : INTEGER := 2 ** %d;" ctrMaxName numBits
+    let ctrCycleName = counterCycleName counterId
+    fprintfn out "  CONSTANT %s : INTEGER := 2 ** %d;" ctrCycleName numBits
     fprintfn out "  SIGNAL %s : UNSIGNED (%d downto 0) := (others => '0');" ctrName numBits
 
   let emitIncrement (counterId: string) _ =
     let ctrName = counterName counterId
-    let ctrMaxName = counterMaxName counterId
-    fprintfn out "      %s <= %s + 1;" ctrName ctrName
+    let ctrCycleName = counterCycleName counterId
+    fprintfn out "      %s <= (%s + 1) MOD %s;" ctrName ctrName ctrCycleName
 
   let emitArchitecture f =
     let statesSpec = aut.States |> List.map (fun s -> stateSpec s.Id) |> String.concat ","
