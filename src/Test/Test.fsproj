@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Expecto" Version="8.*" />
+    <PackageReference Include="Expecto" Version="9.*" />
     <PackageReference Include="FSharp.Core" Version="4.*" />
     <PackageReference Include="Unquote" Version="5.0.0" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" Version="0.*" />

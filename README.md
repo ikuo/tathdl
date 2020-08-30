@@ -10,7 +10,7 @@ Inputs:
 
 ```
 $ dotnet --version
-3.1.101
+3.1.302
 ```
 ```shell
 dotnet restore
