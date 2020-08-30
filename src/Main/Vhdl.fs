@@ -86,7 +86,8 @@ let codegen out (automaton: Automaton) (clockFreq: decimal<MHz>) =
     let ignBits = constr.IgnoreBits clockFreq
     let valueCount = constr.ComparisonValue clockFreq
     let comparator = emitComparator' constr.Comparator
-    sprintf "shift_right(%s, %d) %s %d" cntName ignBits comparator valueCount
+    let maxBit = (aut.CounterNumBits clockFreq).[constr.Clock.Id]
+    sprintf "%s(%d downto %d) %s %d" cntName maxBit ignBits comparator valueCount
 
   let emitConstraints' cs =
     cs |> List.map emitConstraint |> String.concat " AND "
