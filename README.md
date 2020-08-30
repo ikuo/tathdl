@@ -42,11 +42,22 @@ generates [a VHDL code](./examples/ir2solenoid/output/clock2_08MHz.vhd).
 
 ## Building
 
+At project root,
+
 ```shell
 dotnet publish -c Release
 ```
 
+generates `tathdl.{exe,dll}` into `./artifacts/netcoreapp3.1/`.
+
 See also https://docs.microsoft.com/en-us/dotnet/core/deploying/
+
+## Unit Test
+
+```shell
+cd tests/MainTest
+dotnet run
+```
 
 ## Reference
 

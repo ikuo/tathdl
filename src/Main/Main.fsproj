@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>tathdl</AssemblyName>
+    <OutputPath>../../artifacts</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
