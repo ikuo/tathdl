@@ -16,11 +16,34 @@ $ dotnet --version
 dotnet restore
 ```
 
-## Running
+## Building
+
+At project root,
 
 ```shell
-cd ./src/Main
-dotnet run <path-to-dot-file> <clock-frequency>
+dotnet publish -c Release
+```
+
+generates `tathdl.{exe,dll}` into `./artifacts/Main/netcoreapp3.1/`.
+
+See also https://docs.microsoft.com/en-us/dotnet/core/deploying/
+
+## Running
+
+Change directory to or add PATH entry of `./artifacts/Main/netcoreapp3.1/`.
+Then run the following in a shell (cmd.exe, bash etc.):
+
+```shell
+tathdl <path-to-dot-file> <clock-frequency>
+```
+
+It outputs VHDL code into stdout.
+
+In case of PowerShell 5.x or older, you may be required to convert UTF-16 LE conding of redirect as follows:
+
+```powershell
+# Only when PowerShell 5.x or older
+tathdl <path-to-dot-file> <clock-frequency> | Out-File -Encoding ascii out.vhd
 ```
 
 ## Example
@@ -35,22 +58,17 @@ fsm.dot:
 ![](./samples/ir2solenoid/output/fsm.svg)
 
 ```shell
-dotnet run ../../samples/ir2solenoid/src/fsm.dot 2.08MHz
+./artifacts/Main/netcoreapp3.1/tathdl .\samples\ir2solenoid\src\fsm.dot 2.08MHz
 ```
 
-generates [a VHDL code](./samples/ir2solenoid/output/clock2_08MHz.vhd).
+will generate [a VHDL code](./samples/ir2solenoid/output/clock2_08MHz.vhd) to stdout.
 
-## Building
-
-At project root,
+## Running with dotnet cli
 
 ```shell
-dotnet publish -c Release
+cd ./src/Main
+dotnet run <path-to-dot-file> <clock-frequency>
 ```
-
-generates `tathdl.{exe,dll}` into `./artifacts/Main/netcoreapp3.1/`.
-
-See also https://docs.microsoft.com/en-us/dotnet/core/deploying/
 
 ## Unit Test
 
