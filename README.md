@@ -63,6 +63,35 @@ fsm.dot:
 
 will generate [a VHDL code](./samples/ir2solenoid/output/clock2_08MHz.vhd) to stdout.
 
+## Timing Granularity
+
+To compare continuous times with minimum bit widths of HDL literals,
+it accepts timing granularity notation as follows:
+
+```dot
+  graph [label = "<granularity-variable>=<time>"]
+  state1 [ label = "[ <right-hand-side> <comparison-operator><granularity-variable> <left-hand-side> ]" ]
+  ...
+```
+
+`<granularity-variable>` is a Greek letter and its default is `α`.
+
+For example,
+
+```dot
+  graph [label = "α=10us"]
+  state1 [ label = "[ c >α 200us ]" ]
+  ...
+```
+
+is equivalent to
+
+```dot
+  graph [label = "α=10us"]
+  state1 [ label = "[ c > 200us ]" ]
+  ...
+```
+
 ## Running with dotnet cli
 
 ```shell
