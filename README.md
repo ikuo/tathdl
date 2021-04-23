@@ -70,7 +70,7 @@ it accepts timing granularity notation as follows:
 
 ```dot
   graph [label = "<granularity-variable>=<time>"]
-  state1 [ label = "[ <right-hand-side> <comparison-operator><granularity-variable> <left-hand-side> ]" ]
+  state1 [ label = "[ <left-hand-side> <comparison-operator><granularity-variable> <right-hand-side> ]" ]
   ...
 ```
 
